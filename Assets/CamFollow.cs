@@ -6,6 +6,11 @@ using UnityEngine;
 public class CamFollow : MonoBehaviour
 {
     [SerializeField]
+    CameraStates _camState = CameraStates.Global;
+
+    Camera _cam;
+
+    [SerializeField]
     Transform _target;
 
     [SerializeField]
@@ -16,29 +21,59 @@ public class CamFollow : MonoBehaviour
     [SerializeField, Range(0.1f, 1)]
     float _smoothF;
 
+    private GameManager _gameMan;
+
     void Start(){
+        _cam = Camera.main;
+        _gameMan = GameManager.Instance;
         StartCoroutine(FindTarget());
     }
 
     void Update(){
-        
+        UpdateState();
     }
+
+    void UpdateState(){
+        if(Input.GetKeyDown(KeyCode.Keypad0)){
+            _camState = CameraStates.FishSingular;
+            return;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Keypad1)){
+            _camState = CameraStates.Global;
+            return;
+        }
+    }
+
+
     void FixedUpdate()
     {
-        if(_target == null || Input.GetKeyDown(KeyCode.Space))
-        _target = GetRandomActiveGameObject().transform;
+        switch(_camState){
+            case CameraStates.Global :
+                _target = null;
+                transform.position = Vector3.Lerp(transform.position, (Vector3)_gameMan.PerceivedCenter() + _offset, _smoothF);
+                _cam.orthographicSize = Mathf.Lerp(_cam.orthographicSize ,_gameMan.NumberOfFishes * 10f, _smoothF);
+                break;
+            case CameraStates.FishSingular :
+                if(_target == null || Input.GetKeyDown(KeyCode.Space))
+                _target = GetRandomActiveGameObject().transform;
+                transform.position = Vector3.Lerp(transform.position, _target.position + _offset, _smoothF);
+                _cam.orthographicSize = Mathf.Lerp(_cam.orthographicSize ,_target.localScale.x * 20f, _smoothF);
+                break;
+        }
 
-        transform.position = Vector3.Lerp(transform.position, _target.position + _offset, _smoothF);
+        
+
     }
 
     public GameObject GetRandomActiveGameObject()
     {
-        Collider2D[] fiends = Physics2D.OverlapCircleAll(transform.position, 1000000f, _fiendLayer);
+        List<GameObject> fiends = _gameMan.Fishes;
         List<IEnnemy> fiend = new List<IEnnemy>();
 
-        foreach (Collider2D co in fiends)
+        foreach (GameObject go in fiends)
         {
-            if(co.gameObject.TryGetComponent<IEnnemy>(out IEnnemy friend)){
+            if(go.TryGetComponent<IEnnemy>(out IEnnemy friend)){
                 fiend.Add(friend);
             }
         }
@@ -49,9 +84,8 @@ public class CamFollow : MonoBehaviour
             Debug.LogWarning("No active game objects found within range.");
             return null; // Or handle this case differently
         }
-
+        
         int maxHealth = fiend.Max(e => e.Health);
-
         // Safely get a random game object
         return fiend.FirstOrDefault(e => e.Health == maxHealth).gmObj;
     }
@@ -60,4 +94,9 @@ public class CamFollow : MonoBehaviour
         yield return new WaitForSeconds(1);
         _target = GetRandomActiveGameObject().transform;
     }
+}
+
+public enum CameraStates{
+    FishSingular,
+    Global
 }

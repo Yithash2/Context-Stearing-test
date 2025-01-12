@@ -336,8 +336,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae32efe4660e0be4aa78b5cf6a54c044, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _heath: 14
-  _knockBackDuration: 0.8
+  _heath: 4
+  _knockBackDuration: 1
   _state: 0
   _patterns:
   - Name: Defensive
@@ -378,8 +378,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 384
   _rb: {fileID: 8080411326455148830}
-  MaxSpeed: 50
-  RepulsionForceMult: 0
+  MaxSpeed: 40
+  RepulsionForceMult: 2
   clonePrefab: {fileID: 3113930825106482920, guid: 9f4b5f28b656cd3439e7fa81b817e42f, type: 3}
   _isCharging: 0
-  _smoothF: 0.217
+  _smoothF: 0.051

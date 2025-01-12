@@ -64,11 +64,14 @@ public class AnotherFishType : MonoBehaviour, IKnockbakable, IEnnemy
 
     float _forgetTimer = 5;
 
+    private GameManager _gameMan;
+
     void Start()
     {
+        _gameMan = GameManager.Instance;
         UpdatePatterns();
         _realSpeed = MaxSpeed;
-        Target = GetRandomActiveGameObject();
+        Target = _gameMan.GetRandomActiveGameObject(transform);
         
     }
 
@@ -76,6 +79,8 @@ public class AnotherFishType : MonoBehaviour, IKnockbakable, IEnnemy
     {
         if(Health <= 0){
             Destroy(gameObject);
+            _gameMan.RemoveFish(gameObject);
+            return;
         }
         
         if(IsKnockBacked){
@@ -88,7 +93,7 @@ public class AnotherFishType : MonoBehaviour, IKnockbakable, IEnnemy
         }
 
         if(Target == null){
-            Target = GetRandomActiveGameObject();
+            Target = _gameMan.GetRandomActiveGameObject(transform);
         }
 
         UpdatePatterns();
@@ -112,57 +117,10 @@ public class AnotherFishType : MonoBehaviour, IKnockbakable, IEnnemy
         float[] weights = EvaluateDirections(possiblePlayerPos, (Vector2)transform.position, out directions, _curPattern.PatternWeights);
 
         Vector2 steeringDirection = ComputeSteeringDirection(weights, directions);
-        steeringDirection += RepulsionForce() * RepulsionForceMult;
+        steeringDirection += _gameMan.RepulsionForce(gameObject) * RepulsionForceMult;
+        steeringDirection += _gameMan.AttractionForce(gameObject);
         ApplySteering(steeringDirection);
     }
-
-    Vector2 RepulsionForce()
-{
-    Collider2D[] fiends = Physics2D.OverlapCircleAll(transform.position, 50f, _fiendLayer);
-    Vector2 finalForce = Vector2.zero;
-
-    foreach (Collider2D col in fiends)
-    {
-        Vector2 directionToFiend = transform.position - col.transform.position;
-        float distance = directionToFiend.magnitude;
-
-        // Avoid division by zero and ensure meaningful repulsion at very close distances
-        if (distance > 0)
-        {
-            float repulsionForce = 1 / (distance * distance);
-            finalForce += directionToFiend.normalized * repulsionForce; // Normalize direction and apply force magnitude
-        }
-    }
-
-    return finalForce;
-}
-
-    public GameObject GetRandomActiveGameObject()
-    {
-        Collider2D[] fiends = Physics2D.OverlapCircleAll(transform.position, 1000000f, _fiendLayer);
-        List<GameObject> fiend = new List<GameObject>();
-
-        foreach (Collider2D co in fiends)
-        {
-            float Dist = Vector2.Distance(co.transform.position, transform.position);
-            if (Dist != 0)
-            {
-                fiend.Add(co.gameObject);
-            }
-        }
-
-        // Ensure there are valid fiends in the list
-        if (fiend.Count == 0)
-        {
-            Debug.LogWarning("No active game objects found within range.");
-            return null; // Or handle this case differently
-        }
-
-        // Safely get a random game object
-        return fiend[UnityEngine.Random.Range(0, fiend.Count)];
-    }
-
-
 
     void UpdatePatterns(){
         float playerDistance = Vector2.Distance(Target.transform.position, transform.position);
@@ -201,7 +159,7 @@ public class AnotherFishType : MonoBehaviour, IKnockbakable, IEnnemy
             _state = EnnemyStates.Isometric;    
             _forgetTimer -= Time.deltaTime; 
             if(_forgetTimer < 0){
-                Target = GetRandomActiveGameObject();
+                Target = _gameMan.GetRandomActiveGameObject(transform);
                 _isCharging = true;
                 _state = EnnemyStates.Offensive;
             }      
@@ -285,8 +243,7 @@ public class AnotherFishType : MonoBehaviour, IKnockbakable, IEnnemy
             float dist = Vector2.Distance(transform.position, Target.transform.position);
 
             // Apply a smoother curve (e.g., exponential decay)
-            float speedFactor = Mathf.Exp(-dist / 1000f); // Adjust the divisor for scaling effect
-            _rb.velocity = Vector2.Lerp(_rb.velocity, steeringDirection * (_realSpeed * speedFactor), _smoothF);
+            _rb.velocity = Vector2.Lerp(_rb.velocity.normalized * _realSpeed, steeringDirection.normalized * _realSpeed, _smoothF);
 
         }
         else

@@ -11,24 +11,19 @@ public class Instantiator : MonoBehaviour
     [SerializeField]
     int _ennemyCount;
 
+    private GameManager _gameMan;
+
     void Start()
     {
-        List<IEnnemy> Ennemies = new List<IEnnemy>();
-        for(int j = 0; j < _ennemy.Length; j++)
-            for(int i = 0; i < _ennemyCount/_ennemy.Length; i++){
-                GameObject gm = Instantiate(_ennemy[j]);
-                IEnnemy _ennemyController = gm.GetComponent<IEnnemy>();
-                Ennemies.Append(_ennemyController);
-            }
+        _gameMan = GameManager.Instance;
 
-        for(int i = 0; i < Ennemies.Count; i++){
-            if( i != 0){
-                Ennemies[i].Target = Ennemies[i-1].gmObj;
-            }else{
-                Ennemies[i].Target = Ennemies[Ennemies.Count].gmObj;
+        for(int j = 0; j < _ennemy.Length; j++){
+            for(int i = 0; i < _ennemyCount/_ennemy.Length; i++){
+                GameObject go = Instantiate(_ennemy[j]);
+                _gameMan.AddFish(go);  
             }
         }
-
-        
+            
     }
+
 }

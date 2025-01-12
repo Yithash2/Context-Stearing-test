@@ -146,9 +146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 320c459acc01a4146905024fc129e6a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _heath: 3
-  _knockBackDuration: 1
-  Target: {fileID: 0}
+  _heath: 12
+  _knockBackDuration: 0.4
   _state: 1
   _patterns:
   - Name: Defensive
@@ -190,10 +189,10 @@ MonoBehaviour:
     m_Bits: 256
   _rb: {fileID: 986332997097095833}
   MaxSpeed: 10
-  RepulsionForceMult: 0
+  RepulsionForceMult: 2
   clonePrefab: {fileID: 3113930825106482920, guid: 1a75021c64c42704299446c4dbd64926, type: 3}
   _isCharging: 0
-  _smoothF: 0.155
+  _smoothF: 0.076
 --- !u!50 &986332997097095833
 Rigidbody2D:
   serializedVersion: 4
