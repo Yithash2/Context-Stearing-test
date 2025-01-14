@@ -20,7 +20,7 @@ public class Instantiator : MonoBehaviour
         for(int j = 0; j < _ennemy.Length; j++){
             for(int i = 0; i < _ennemyCount/_ennemy.Length; i++){
                 GameObject go = Instantiate(_ennemy[j]);
-                _gameMan.AddFish(go);  
+                _gameMan.AddFish(go);
             }
         }
             

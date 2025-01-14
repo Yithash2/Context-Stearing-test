@@ -26,7 +26,6 @@ public class CamFollow : MonoBehaviour
     void Start(){
         _cam = Camera.main;
         _gameMan = GameManager.Instance;
-        StartCoroutine(FindTarget());
     }
 
     void Update(){
@@ -52,13 +51,13 @@ public class CamFollow : MonoBehaviour
             case CameraStates.Global :
                 _target = null;
                 transform.position = Vector3.Lerp(transform.position, (Vector3)_gameMan.PerceivedCenter() + _offset, _smoothF);
-                _cam.orthographicSize = Mathf.Lerp(_cam.orthographicSize ,_gameMan.NumberOfFishes * 10f, _smoothF);
+                _cam.orthographicSize = Mathf.Lerp(_cam.orthographicSize ,Mathf.Sqrt(_gameMan.NumberOfFishes) * 10f, _smoothF);
                 break;
             case CameraStates.FishSingular :
                 if(_target == null || Input.GetKeyDown(KeyCode.Space))
                 _target = GetRandomActiveGameObject().transform;
                 transform.position = Vector3.Lerp(transform.position, _target.position + _offset, _smoothF);
-                _cam.orthographicSize = Mathf.Lerp(_cam.orthographicSize ,_target.localScale.x * 20f, _smoothF);
+                _cam.orthographicSize = Mathf.Lerp(_cam.orthographicSize ,Mathf.Sqrt(_target.localScale.x) * 20f, _smoothF);
                 break;
         }
 
@@ -69,11 +68,11 @@ public class CamFollow : MonoBehaviour
     public GameObject GetRandomActiveGameObject()
     {
         List<GameObject> fiends = _gameMan.Fishes;
-        List<IEnnemy> fiend = new List<IEnnemy>();
+        List<Ennemy> fiend = new List<Ennemy>();
 
         foreach (GameObject go in fiends)
         {
-            if(go.TryGetComponent<IEnnemy>(out IEnnemy friend)){
+            if(go.TryGetComponent<Ennemy>(out Ennemy friend)){
                 fiend.Add(friend);
             }
         }
@@ -87,7 +86,7 @@ public class CamFollow : MonoBehaviour
         
         int maxHealth = fiend.Max(e => e.Health);
         // Safely get a random game object
-        return fiend.FirstOrDefault(e => e.Health == maxHealth).gmObj;
+        return fiend.FirstOrDefault(e => e.Health == maxHealth).gameObject;
     }
 
     IEnumerator FindTarget(){

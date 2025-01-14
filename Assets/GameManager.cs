@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
 
     public List<GameObject> Fishes {get; private set;}
     public int NumberOfFishes {get {return Fishes.Count;}}
+
+    [SerializeField]
+    TextMeshPro text;
 
     public static GameManager Instance {get; private set;}
 
@@ -19,6 +23,11 @@ public class GameManager : MonoBehaviour
         Instance = this;
 
         Fishes = new List<GameObject>();
+    }
+
+    void Update(){
+        text.text = NumberOfFishes.ToString();
+        text.fontSize = Camera.main.orthographicSize * 10;
     }
 
     public GameObject GetRandomActiveGameObject(Transform fishTransform){
