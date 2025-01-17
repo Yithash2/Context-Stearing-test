@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public abstract class Ennemy : MonoBehaviour, IKnockbakable{
@@ -67,6 +66,7 @@ public abstract class Ennemy : MonoBehaviour, IKnockbakable{
 
     void Start()
     {
+        _maxSpeed = Random.Range(_maxSpeed*0.5f, _maxSpeed*2f);
         _gameMan = GameManager.Instance;
         UpdatePatterns();
         _realSpeed = _maxSpeed;

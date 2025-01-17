@@ -13,17 +13,26 @@ public class Instantiator : MonoBehaviour
 
     private GameManager _gameMan;
 
+    [SerializeField]
+    float _spawnPerimeter;
+
     void Start()
     {
         _gameMan = GameManager.Instance;
 
         for(int j = 0; j < _ennemy.Length; j++){
             for(int i = 0; i < _ennemyCount/_ennemy.Length; i++){
-                GameObject go = Instantiate(_ennemy[j]);
+                Vector3 _pos = Random.insideUnitCircle * _spawnPerimeter;
+                GameObject go = Instantiate(_ennemy[j], _pos, Quaternion.identity);
                 _gameMan.AddFish(go);
             }
         }
             
+    }
+
+    void OnDrawGizmos(){
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, _spawnPerimeter);
     }
 
 }

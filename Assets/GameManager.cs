@@ -6,7 +6,14 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
 
-    public List<GameObject> Fishes {get; private set;}
+    public bool BadPC {get {return _badPC;}}
+
+    [SerializeField]
+    bool _badPC = true;
+
+    public List<GameObject> Fishes {get {return _fishes;} private set {_fishes = value;}}
+    [SerializeField]
+    List<GameObject> _fishes;
     public int NumberOfFishes {get {return Fishes.Count;}}
 
     [SerializeField]
@@ -104,4 +111,25 @@ public class GameManager : MonoBehaviour
 
         return perceivedCenter / (NumberOfFishes-1);
     }
+
+    public Vector2 PerceivedCenterWeight(){
+        Vector2 perceivedCenter = Vector2.zero;
+        float totalWeight = 0f;
+
+        foreach (GameObject go in Fishes)
+        {
+            if (go.TryGetComponent<Ennemy>(out Ennemy ennemy))
+            {
+                perceivedCenter += (Vector2)go.transform.position * ennemy.Health;
+                totalWeight += ennemy.Health;
+            }
+        }
+
+        // Avoid division by zero
+        if (totalWeight == 0)
+            return Vector2.zero;
+
+        return perceivedCenter / totalWeight;
+    }
+
 }

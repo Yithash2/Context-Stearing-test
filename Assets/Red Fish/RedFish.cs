@@ -9,13 +9,13 @@ public class RedFish : Ennemy
         if(IsCharging && _state == EnnemyStates.Isometric){
             if(playerDistance < 11 + Target.transform.localScale.x - 1){
                 IsCharging = false;
-                Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
+                if(!GameMan.BadPC)Instantiate(ExplosionPrefab, transform.position, Quaternion.identity).transform.localScale = transform.localScale;
                 Target.GetComponent<IKnockbakable>().SetKnockBack(Rb.velocity*2); 
 
                 Ennemy ennemy;
                 if(Target.TryGetComponent<Ennemy>(out ennemy)){
-                    ennemy.SubbHealthEvent(1);
-                    Health += 1;
+                    ennemy.SubbHealthEvent(2);
+                    //Health += 1;
                     transform.localScale = transform.localScale + new Vector3(1,1,1);
                 }
                 
@@ -32,10 +32,13 @@ public class RedFish : Ennemy
         {
             _state = EnnemyStates.Defensive; 
             _realSpeed = MaxSpeed*Mathf.Sqrt(transform.localScale.x);
-        }else{
+        }else if (playerDistance < 400 + Target.transform.localScale.x - 1){
             _state = EnnemyStates.Isometric;
             IsCharging = true;
             _realSpeed = 4*MaxSpeed*Mathf.Sqrt(transform.localScale.x);
+        }else{
+            _state = EnnemyStates.Offensive;
+            _realSpeed = MaxSpeed * 4 ;
         }
     }
 

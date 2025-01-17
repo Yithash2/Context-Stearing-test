@@ -48,51 +48,34 @@ public class CamFollow : MonoBehaviour
     void FixedUpdate()
     {
         switch(_camState){
-            case CameraStates.Global :
+            case CameraStates.Global:
                 _target = null;
-                transform.position = Vector3.Lerp(transform.position, (Vector3)_gameMan.PerceivedCenter() + _offset, _smoothF);
-                _cam.orthographicSize = Mathf.Lerp(_cam.orthographicSize ,Mathf.Sqrt(_gameMan.NumberOfFishes) * 10f, _smoothF);
+                Vector3 actionCenter = _gameMan.PerceivedCenterWeight();
+                transform.position = Vector3.Lerp(transform.position, actionCenter + _offset, _smoothF);
+                _cam.orthographicSize = Mathf.Lerp(_cam.orthographicSize, Mathf.Sqrt(Mathf.Pow(_gameMan.NumberOfFishes, 2) + Mathf.Pow(SizeAverage(), 2)) * 10f, _smoothF);
                 break;
             case CameraStates.FishSingular :
                 if(_target == null || Input.GetKeyDown(KeyCode.Space))
-                _target = GetRandomActiveGameObject().transform;
+                _target = _gameMan.GetRandomActiveGameObject(transform).transform;
                 transform.position = Vector3.Lerp(transform.position, _target.position + _offset, _smoothF);
                 _cam.orthographicSize = Mathf.Lerp(_cam.orthographicSize ,Mathf.Sqrt(_target.localScale.x) * 20f, _smoothF);
                 break;
         }
 
-        
-
     }
 
-    public GameObject GetRandomActiveGameObject()
-    {
-        List<GameObject> fiends = _gameMan.Fishes;
-        List<Ennemy> fiend = new List<Ennemy>();
+    float SizeAverage(){
+        var _lstfishes = _gameMan.Fishes;
 
-        foreach (GameObject go in fiends)
-        {
-            if(go.TryGetComponent<Ennemy>(out Ennemy friend)){
-                fiend.Add(friend);
-            }
+        float r = 0;
+
+        foreach(GameObject go in _lstfishes){
+            r += go.transform.localScale.x;
         }
 
-        // Ensure there are valid fiends in the list
-        if (fiend.Count == 0)
-        {
-            Debug.LogWarning("No active game objects found within range.");
-            return null; // Or handle this case differently
-        }
-        
-        int maxHealth = fiend.Max(e => e.Health);
-        // Safely get a random game object
-        return fiend.FirstOrDefault(e => e.Health == maxHealth).gameObject;
+        return r / _gameMan.NumberOfFishes;
     }
 
-    IEnumerator FindTarget(){
-        yield return new WaitForSeconds(1);
-        _target = GetRandomActiveGameObject().transform;
-    }
 }
 
 public enum CameraStates{
