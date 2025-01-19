@@ -144,7 +144,7 @@ MonoBehaviour:
     m_Bits: 384
   _rb: {fileID: 113399698445985471}
   _maxSpeed: 40
-  RepulsionForceMult: 40
+  RepulsionForceMult: 0
   AttractionForceMult: 1
   _explosionPrefab: {fileID: 3113930825106482920, guid: 9f4b5f28b656cd3439e7fa81b817e42f, type: 3}
   IsCharging: 0

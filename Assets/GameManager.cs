@@ -113,23 +113,32 @@ public class GameManager : MonoBehaviour
     }
 
     public Vector2 PerceivedCenterWeight(){
-        Vector2 perceivedCenter = Vector2.zero;
-        float totalWeight = 0f;
+    Vector2 perceivedCenter = Vector2.zero;
+    float totalWeight = 0f;
 
-        foreach (GameObject go in Fishes)
+    // Calculate the initial perceived center as a weighted average of the fish positions
+    foreach (GameObject go in Fishes)
+    {
+        if (go.TryGetComponent<Ennemy>(out Ennemy ennemy))
         {
-            if (go.TryGetComponent<Ennemy>(out Ennemy ennemy))
-            {
-                perceivedCenter += (Vector2)go.transform.position * ennemy.Health;
-                totalWeight += ennemy.Health;
-            }
+            float distance = ((Vector2)go.transform.position - perceivedCenter).magnitude;
+            
+            float distanceWeight = (distance == 0f) ? 1f : 1f / distance;
+            
+            // The weight will now be a combination of health and distance.
+            float weightedHealth = ennemy.Health * distanceWeight;
+            
+            perceivedCenter += (Vector2)go.transform.position * weightedHealth;
+            totalWeight += weightedHealth;
         }
-
-        // Avoid division by zero
-        if (totalWeight == 0)
-            return Vector2.zero;
-
-        return perceivedCenter / totalWeight;
     }
+
+    // Avoid division by zero
+    if (totalWeight == 0)
+        return Vector2.zero;
+
+    return perceivedCenter / totalWeight;
+}
+
 
 }

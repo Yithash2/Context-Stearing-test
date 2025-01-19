@@ -130,7 +130,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 3
+  m_Time: 0.25
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -289,9 +289,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 384
   _rb: {fileID: 3427343344682127616}
-  _maxSpeed: 70
+  _maxSpeed: 60
   RepulsionForceMult: 0
-  AttractionForceMult: 2
+  AttractionForceMult: 1
   _explosionPrefab: {fileID: 3113930825106482920, guid: 32fbdd0e991222941bf381f6fee048ce, type: 3}
   IsCharging: 0
   _smoothF: 0.075
@@ -321,7 +321,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &3706164900076775891
 BoxCollider2D:
   m_ObjectHideFlags: 0

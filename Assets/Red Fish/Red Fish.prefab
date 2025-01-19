@@ -336,7 +336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e78d2dd6e61e1341a84c2d83854dca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _heath: 12
+  _heath: 16
   _knockBackDuration: 0.4
   _target: {fileID: 0}
   _state: 1
@@ -379,9 +379,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 384
   _rb: {fileID: 986332997097095833}
-  _maxSpeed: 20
-  RepulsionForceMult: -10
-  AttractionForceMult: 40
+  _maxSpeed: 40
+  RepulsionForceMult: 0
+  AttractionForceMult: 1
   _explosionPrefab: {fileID: 3113930825106482920, guid: 1a75021c64c42704299446c4dbd64926, type: 3}
   IsCharging: 0
   _smoothF: 0.076
