@@ -6,10 +6,11 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
 
+    public bool ChildMechanic {get {return _childMechanic;}}
     public bool BadPC {get {return _badPC;}}
 
     [SerializeField]
-    bool _badPC = true;
+    bool _badPC, _childMechanic = true;
 
     public List<GameObject> Fishes {get {return _fishes;} private set {_fishes = value;}}
     [SerializeField]
@@ -18,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     TextMeshPro text;
+    [SerializeField]
+    RectTransform textGo;
 
     public static GameManager Instance {get; private set;}
 
@@ -34,7 +37,10 @@ public class GameManager : MonoBehaviour
 
     void Update(){
         text.text = NumberOfFishes.ToString();
-        text.fontSize = Camera.main.orthographicSize * 10;
+        textGo.localScale = new Vector3(1, 1,1) * NumberOfFishes;
+        if(NumberOfFishes > 400)_childMechanic = false;
+
+
     }
 
     public GameObject GetRandomActiveGameObject(Transform fishTransform){
@@ -84,7 +90,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        return finalForce;
+        return finalForce.normalized;
     }
 
     public Vector2 AttractionForce(GameObject fish)
@@ -93,11 +99,7 @@ public class GameManager : MonoBehaviour
 
         Vector2 directionToCenter = perceivedCenter - (Vector2)fish.transform.position;
 
-        float force = Vector2.Distance(perceivedCenter, fish.transform.position);
-
-        Vector2 finalForce = directionToCenter * Mathf.Sqrt(force);
-
-        return finalForce;
+        return directionToCenter.normalized;
     }
 
     public Vector2 PerceivedCenter(){

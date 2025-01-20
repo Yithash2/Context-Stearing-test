@@ -385,3 +385,7 @@ MonoBehaviour:
   _explosionPrefab: {fileID: 3113930825106482920, guid: 1a75021c64c42704299446c4dbd64926, type: 3}
   IsCharging: 0
   _smoothF: 0.076
+  _litter: 2
+  MaxNumberOfChild: 6
+  _numbOfChild: 0
+  _preFab: {fileID: 490349157898228012}

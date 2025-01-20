@@ -232,13 +232,13 @@ MonoBehaviour:
     - 0
     - 0
     - 0
-    - 0.5
-    - 2
+    - 0
+    - 0
+    - 0
     - 8
     - 16
-    - 8
-    - 2
-    - 0.5
+    - 0
+    - 0
     - 0
     - 0
     - 0
@@ -249,8 +249,6 @@ MonoBehaviour:
     PatternWeights:
     - 8
     - 1
-    - 0.5
-    - 0.25
     - 0
     - 0
     - 0
@@ -260,8 +258,10 @@ MonoBehaviour:
     - 0
     - 0
     - 0
-    - 0.25
-    - 0.5
+    - 0
+    - 0
+    - 0
+    - 0
     - 1
   - Name: NOT USED
     PatternWeights:
@@ -295,6 +295,10 @@ MonoBehaviour:
   _explosionPrefab: {fileID: 3113930825106482920, guid: 32fbdd0e991222941bf381f6fee048ce, type: 3}
   IsCharging: 0
   _smoothF: 0.075
+  _litter: 1
+  MaxNumberOfChild: 9
+  _numbOfChild: 0
+  _preFab: {fileID: 5717359947594630675}
 --- !u!50 &3427343344682127616
 Rigidbody2D:
   serializedVersion: 4

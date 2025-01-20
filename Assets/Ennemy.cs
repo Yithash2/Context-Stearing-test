@@ -64,14 +64,39 @@ public abstract class Ennemy : MonoBehaviour, IKnockbakable{
     [SerializeField, Range(0.001f, 1f)]
     float _smoothF;
 
+    [SerializeField]
+    int _litter;
+
+    public int MaxNumberOfChild;
+
+    [SerializeField]
+    private int _numbOfChild = 0;
+
+    [SerializeField]
+    GameObject _preFab;
+ 
+
+ 
     void Start()
     {
         _maxSpeed = Random.Range(_maxSpeed*0.5f, _maxSpeed*2f);
         _gameMan = GameManager.Instance;
-        UpdatePatterns();
         _realSpeed = _maxSpeed;
         Target = _gameMan.GetRandomActiveGameObject(transform);
         
+    }
+
+    void MakeChild(int n){
+        Vector2 posBehind = (Vector2)gameObject.transform.position - _rb.velocity.normalized * (gameObject.transform.localScale.x + 10);
+        for(int i = 1; i <= n; i++){
+            GameObject go = Instantiate(_preFab, posBehind, Quaternion.identity);
+            go.TryGetComponent<Ennemy>(out Ennemy _enemy);
+            if(_enemy && _enemy.MaxNumberOfChild != 0)
+                _enemy.MaxNumberOfChild -= Random.Range(0,MaxNumberOfChild);
+            _gameMan.AddFish(go);
+        }
+
+        _numbOfChild += n;
     }
 
     void Update()
@@ -91,8 +116,16 @@ public abstract class Ennemy : MonoBehaviour, IKnockbakable{
             }
         }
 
-        if(Target == null){
+        if(Target == null && _gameMan.NumberOfFishes != 0){
             Target = _gameMan.GetRandomActiveGameObject(transform);
+            if(_gameMan.ChildMechanic){
+                if(_numbOfChild + _litter < MaxNumberOfChild){
+                    MakeChild(_litter);
+                }else if(_numbOfChild < MaxNumberOfChild){
+                    MakeChild(MaxNumberOfChild - _numbOfChild);
+                }
+            }
+            
         }
 
         

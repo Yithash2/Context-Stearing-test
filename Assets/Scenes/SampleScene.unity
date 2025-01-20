@@ -687,7 +687,7 @@ MonoBehaviour:
   - {fileID: 9110752606939447132, guid: fb1ab4cf11d84f245a295fe121d580d0, type: 3}
   - {fileID: 490349157898228012, guid: fe644ec8011044c448c624ce7dcde6ee, type: 3}
   - {fileID: 5717359947594630675, guid: 4b62a0e95a323e0489bc88fad94c8e6e, type: 3}
-  _ennemyCount: 30
+  _ennemyCount: 27
   _spawnPerimeter: 200
 --- !u!4 &1241496054
 Transform:
@@ -941,9 +941,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfa54468f8a8d0e4bb7c809d6843068b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _badPC: 0
+  _badPC: 1
+  _childMechanic: 1
   _fishes: []
   text: {fileID: 1847422701}
+  textGo: {fileID: 1847422703}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

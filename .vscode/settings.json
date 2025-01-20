@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Context Stearing test.sln"
+    "dotnet.defaultSolution": "Context-Stearing-test.sln"
 }

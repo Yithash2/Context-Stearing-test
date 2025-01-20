@@ -135,7 +135,7 @@ MonoBehaviour:
     - 1
     - 2
     - 4
-  RayCount: 8
+  RayCount: 3
   _obstacleLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -143,12 +143,16 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 384
   _rb: {fileID: 113399698445985471}
-  _maxSpeed: 40
-  RepulsionForceMult: 0
+  _maxSpeed: 20
+  RepulsionForceMult: -5
   AttractionForceMult: 1
   _explosionPrefab: {fileID: 3113930825106482920, guid: 9f4b5f28b656cd3439e7fa81b817e42f, type: 3}
   IsCharging: 0
-  _smoothF: 0.059
+  _smoothF: 0.051
+  _litter: 3
+  MaxNumberOfChild: 9
+  _numbOfChild: 0
+  _preFab: {fileID: 9110752606939447132}
 --- !u!50 &113399698445985471
 Rigidbody2D:
   serializedVersion: 4
