@@ -121,7 +121,7 @@ public class GameManager : MonoBehaviour
     // Calculate the initial perceived center as a weighted average of the fish positions
     foreach (GameObject go in Fishes)
     {
-        if (go.TryGetComponent<Ennemy>(out Ennemy ennemy))
+        if (go.TryGetComponent<IKillable>(out IKillable ennemy))
         {
             float distance = ((Vector2)go.transform.position - perceivedCenter).magnitude;
             

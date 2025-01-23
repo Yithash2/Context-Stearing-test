@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BlueFish : Ennemy{
+public class BlueFish : Fish{
 
     protected override void UpdatePatterns(){
         float playerDistance = Vector2.Distance(Target.transform.position, transform.position);
@@ -16,11 +16,11 @@ public class BlueFish : Ennemy{
             _state = EnnemyStates.Defensive;
             IsCharging = true;
             if(!GameMan.BadPC)Instantiate(ExplosionPrefab, transform.position, Quaternion.identity).transform.localScale = transform.localScale;
-                Target.GetComponent<IKnockbakable>().SetKnockBack(Rb.velocity*2); 
+                Target.TryGetComponent<IKnockbakable>(out IKnockbakable _kb); 
+                _kb?.SetKnockBack(Rb.velocity*2); 
 
-                Ennemy ennemy;
-                if(Target.TryGetComponent<Ennemy>(out ennemy)){
-                    ennemy.SubbHealthEvent(1);
+                if(Target.TryGetComponent<IKillable>(out IKillable killable)){
+                    killable.SubbHealthEvent(1);
                     //Health += 1;
                     transform.localScale = transform.localScale + new Vector3(1,1,1);
                 }
@@ -50,4 +50,6 @@ public class BlueFish : Ennemy{
         }
         return _curPattern;
     }
+
+    protected override void AfterStart(){}
 }

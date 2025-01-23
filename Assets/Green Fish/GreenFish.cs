@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GreenFish : Ennemy{
+public class GreenFish : Fish{
     float _forgetTimer = 5f;
 
     protected override void UpdatePatterns(){
@@ -23,10 +23,10 @@ public class GreenFish : Ennemy{
             _realSpeed = 4*MaxSpeed*Mathf.Sqrt(transform.localScale.x);
 
             if(!GameMan.BadPC)Instantiate(ExplosionPrefab, transform.position, Quaternion.identity).transform.localScale = transform.localScale;
-                Target.GetComponent<IKnockbakable>().SetKnockBack(Rb.velocity*2); 
-                Ennemy ennemy;
-                if(Target.TryGetComponent<Ennemy>(out ennemy)){
-                    ennemy.SubbHealthEvent(1);
+                Target.TryGetComponent<IKnockbakable>(out IKnockbakable _kb); 
+                _kb?.SetKnockBack(Rb.velocity*2); 
+                if(Target.TryGetComponent<IKillable>(out IKillable killable)){
+                    killable.SubbHealthEvent(1);
                     transform.localScale = transform.localScale + new Vector3(1,1,1);
                 }
 
@@ -64,4 +64,6 @@ public class GreenFish : Ennemy{
         }
         return _curPattern;
     }
+
+    protected override void AfterStart(){}
 }

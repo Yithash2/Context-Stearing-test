@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Ennemy : MonoBehaviour, IKnockbakable{
+public abstract class Fish : MonoBehaviour, IKnockbakable, IKillable{
 
     public int Health {get {return _heath;} set {_heath = value;}}
 
@@ -29,12 +29,6 @@ public abstract class Ennemy : MonoBehaviour, IKnockbakable{
     int RayCount = 16; // Number of rays cast
 
     [SerializeField]
-    protected LayerMask _obstacleLayer;
-
-    [SerializeField]
-    protected LayerMask _fiendLayer;
-
-    [SerializeField]
     Rigidbody2D _rb;
 
     [SerializeField]
@@ -51,6 +45,9 @@ public abstract class Ennemy : MonoBehaviour, IKnockbakable{
     protected float _realSpeed;
 
     [SerializeField]
+    LayerMask _obstacleLayer;
+
+    [SerializeField]
     GameObject _explosionPrefab;
 
     protected GameObject ExplosionPrefab{get {return _explosionPrefab;}}
@@ -64,6 +61,8 @@ public abstract class Ennemy : MonoBehaviour, IKnockbakable{
     [SerializeField, Range(0.001f, 1f)]
     float _smoothF;
 
+    [Header("Child Mechanic")]
+
     [SerializeField]
     int _litter;
 
@@ -73,7 +72,7 @@ public abstract class Ennemy : MonoBehaviour, IKnockbakable{
     private int _numbOfChild = 0;
 
     [SerializeField]
-    GameObject _preFab;
+    GameObject _egg;
  
 
  
@@ -83,16 +82,25 @@ public abstract class Ennemy : MonoBehaviour, IKnockbakable{
         _gameMan = GameManager.Instance;
         _realSpeed = _maxSpeed;
         Target = _gameMan.GetRandomActiveGameObject(transform);
-        
+        AfterStart();
     }
 
     void MakeChild(int n){
         Vector2 posBehind = (Vector2)gameObject.transform.position - _rb.velocity.normalized * (gameObject.transform.localScale.x + 10);
+        float angleRange = 90f; // Angle in degrees for the arc (e.g., -22.5 to +22.5 degrees)
+        float radius = 10f; // Distance between the object and the eggs
         for(int i = 1; i <= n; i++){
-            GameObject go = Instantiate(_preFab, posBehind, Quaternion.identity);
-            go.TryGetComponent<Ennemy>(out Ennemy _enemy);
-            if(_enemy && _enemy.MaxNumberOfChild != 0)
-                _enemy.MaxNumberOfChild -= Random.Range(0,MaxNumberOfChild);
+            float angle = Mathf.Lerp(-angleRange / 2, angleRange / 2, (float)i / (n - 1));
+            float angleRad = angle * Mathf.Deg2Rad;
+            Vector2 offset = new Vector2(Mathf.Cos(angleRad) * radius, Mathf.Sin(angleRad) * radius);
+            Vector2 spawnPosition = posBehind + offset;
+            GameObject go = Instantiate(_egg, spawnPosition, Quaternion.identity);
+            go.TryGetComponent<Egg>(out Egg egg);
+            if(egg){
+                egg.Fertility = Random.Range(0,MaxNumberOfChild);
+                egg.StartHatching();
+            }
+                
             _gameMan.AddFish(go);
         }
 
@@ -146,6 +154,8 @@ public abstract class Ennemy : MonoBehaviour, IKnockbakable{
     protected abstract void UpdatePatterns();
 
     protected abstract Pattern GetPatterns();
+
+    protected abstract void AfterStart();
 
     public void SubbHealthEvent(int heathSubbed){
         Health = Mathf.Clamp(Health - heathSubbed, 0, int.MaxValue);
@@ -233,6 +243,14 @@ public abstract class Ennemy : MonoBehaviour, IKnockbakable{
             Health --;
         }
         
-        Target = collision.gameObject;
+    }
+}
+
+public interface IKillable{
+
+    public int Health {get; set;}
+
+    public void SubbHealthEvent(int heathSubbed){
+        Health = Mathf.Clamp(Health - heathSubbed, 0, int.MaxValue);
     }
 }

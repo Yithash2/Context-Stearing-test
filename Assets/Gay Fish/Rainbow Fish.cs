@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RedFish : Fish
+public class RainbowFish : Fish
 {
     protected override void UpdatePatterns(){
         float playerDistance = Vector2.Distance(Target.transform.position, transform.position);
@@ -11,7 +11,7 @@ public class RedFish : Fish
                 IsCharging = false;
                 if(!GameMan.BadPC)Instantiate(ExplosionPrefab, transform.position, Quaternion.identity).transform.localScale = transform.localScale;
                 Target.TryGetComponent<IKnockbakable>(out IKnockbakable _kb); 
-                _kb?.SetKnockBack(Rb.velocity*2); 
+                _kb?.SetKnockBack(Rb.velocity*2);
 
                 if(Target.TryGetComponent<IKillable>(out IKillable killable)){
                     killable.SubbHealthEvent(2);
@@ -58,5 +58,17 @@ public class RedFish : Fish
         return _curPattern;
     }
 
-    protected override void AfterStart(){}
+    protected override void AfterStart(){
+        _patterns = new Pattern[3];
+        for(int i = 0; i < 3; i++){
+            _patterns[i].PatternWeights = new float[8];
+            for(int j = 0; j < 8; j++){
+                if(Random.Range(0, 2) == 0)
+                _patterns[i].PatternWeights[j] = Random.Range(-10f, 10f);
+            }
+        }
+
+        gameObject.TryGetComponent<SpriteRenderer>(out SpriteRenderer _sp);
+        _sp.color = Random.ColorHSV(0, 1, 1, 1, 1, 1);
+    }
 }
