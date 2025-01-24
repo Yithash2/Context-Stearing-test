@@ -23,10 +23,14 @@ public class Egg : MonoBehaviour, IKillable{
     IEnumerator HatchInSec(){
         yield return new WaitForSeconds(_timeUntilHatch);
         GameObject go = Instantiate(_fish);
-        GameManager.Instance.RemoveFish(this.gameObject);
         GameManager.Instance.AddFish(go);
-        Destroy(this.gameObject);
+        Die();
         go.TryGetComponent<Fish>(out Fish _f);
         if(_f)_f.MaxNumberOfChild = Fertility;
+    }
+
+    public void Die(){
+        GameManager.Instance.RemoveFish(gameObject);
+        Destroy(gameObject);   
     }
 }

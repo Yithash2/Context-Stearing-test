@@ -684,9 +684,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ennemy:
-  - {fileID: 5717359947594630675, guid: 4b62a0e95a323e0489bc88fad94c8e6e, type: 3}
-  - {fileID: 2078862395720546290, guid: 18765300698d93141bdd598c5c2aec31, type: 3}
-  _ennemyCount: 40
+  - {fileID: 3382308956034618245, guid: bdc87df7e80e70c48abd68191363b592, type: 3}
+  _ennemyCount: 10
   _spawnPerimeter: 300
 --- !u!4 &1241496054
 Transform:

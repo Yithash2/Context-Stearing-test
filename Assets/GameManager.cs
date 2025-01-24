@@ -39,8 +39,6 @@ public class GameManager : MonoBehaviour
         text.text = NumberOfFishes.ToString();
         textGo.localScale = new Vector3(1, 1,1) * NumberOfFishes;
         if(NumberOfFishes > 400)_childMechanic = false;
-
-
     }
 
     public GameObject GetRandomActiveGameObject(Transform fishTransform){
@@ -63,6 +61,29 @@ public class GameManager : MonoBehaviour
 
         // Safely get a random game object
         return fiend[UnityEngine.Random.Range(0, fiend.Count)];
+    }
+
+    public GameObject GetRandomChildGameObject(out Egg p_egg){
+        List<Egg> fiend = new List<Egg>();
+
+        foreach (GameObject obj in Fishes)
+        {
+            
+            if (obj.TryGetComponent<Egg>(out Egg egg))
+            {
+                fiend.Add(egg);
+            }
+        }
+
+        if (fiend.Count == 0)
+        {
+            Debug.LogWarning("No Eggs Found.");
+            p_egg = null;
+            return null; // Or handle this case differently
+        }
+
+        p_egg = fiend[UnityEngine.Random.Range(0, fiend.Count)];
+        return p_egg.gameObject;
     }
 
     public void RemoveFish(GameObject fish){

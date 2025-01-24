@@ -85,6 +85,16 @@ public abstract class Fish : MonoBehaviour, IKnockbakable, IKillable{
         AfterStart();
     }
 
+    protected void CalculateChild(){
+        if(_gameMan.ChildMechanic){
+            if(_numbOfChild + _litter < MaxNumberOfChild){
+                MakeChild(_litter);
+            }else if(_numbOfChild < MaxNumberOfChild){
+                MakeChild(MaxNumberOfChild - _numbOfChild);
+            }
+        }
+    }
+
     void MakeChild(int n){
         Vector2 posBehind = (Vector2)gameObject.transform.position - _rb.velocity.normalized * (gameObject.transform.localScale.x + 10);
         float angleRange = 90f; // Angle in degrees for the arc (e.g., -22.5 to +22.5 degrees)
@@ -108,13 +118,7 @@ public abstract class Fish : MonoBehaviour, IKnockbakable, IKillable{
     }
 
     void Update()
-    {
-        if(Health <= 0){
-            Destroy(gameObject);
-            _gameMan.RemoveFish(gameObject);
-            return;
-        }
-        
+    {       
         if(IsKnockBacked){
             if(KnockBackTimer < KnockBackDuration){
                 KnockBackTimer += Time.deltaTime;
@@ -124,16 +128,8 @@ public abstract class Fish : MonoBehaviour, IKnockbakable, IKillable{
             }
         }
 
-        if(Target == null && _gameMan.NumberOfFishes != 0){
-            Target = _gameMan.GetRandomActiveGameObject(transform);
-            if(_gameMan.ChildMechanic){
-                if(_numbOfChild + _litter < MaxNumberOfChild){
-                    MakeChild(_litter);
-                }else if(_numbOfChild < MaxNumberOfChild){
-                    MakeChild(MaxNumberOfChild - _numbOfChild);
-                }
-            }
-            
+        if(Target == null && _gameMan.NumberOfFishes > 1){
+            ChangeTarget();
         }
 
         
@@ -159,6 +155,11 @@ public abstract class Fish : MonoBehaviour, IKnockbakable, IKillable{
 
     public void SubbHealthEvent(int heathSubbed){
         Health = Mathf.Clamp(Health - heathSubbed, 0, int.MaxValue);
+    }
+
+    protected virtual void ChangeTarget(){
+        Target = _gameMan.GetRandomActiveGameObject(transform);
+        CalculateChild();
     }
 
 
@@ -237,6 +238,11 @@ public abstract class Fish : MonoBehaviour, IKnockbakable, IKillable{
         }
     }
 
+    public void Die(){
+        _gameMan.RemoveFish(gameObject);
+        Destroy(gameObject);   
+    }
+
     void OnCollisionEnter2D(Collision2D collision){
         if(collision.gameObject.CompareTag("Player")){
             GetComponent<IKnockbakable>().SetKnockBack(collision.rigidbody.velocity*4);
@@ -252,5 +258,11 @@ public interface IKillable{
 
     public void SubbHealthEvent(int heathSubbed){
         Health = Mathf.Clamp(Health - heathSubbed, 0, int.MaxValue);
+
+        if(Health <= 0){
+            Die();
+        }
     }
+
+    public void Die();
 }
