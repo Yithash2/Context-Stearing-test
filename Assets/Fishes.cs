@@ -81,7 +81,7 @@ public abstract class Fish : MonoBehaviour, IKnockbakable, IKillable{
         _maxSpeed = Random.Range(_maxSpeed*0.5f, _maxSpeed*2f);
         _gameMan = GameManager.Instance;
         _realSpeed = _maxSpeed;
-        Target = _gameMan.GetRandomActiveGameObject(transform);
+        ChangeTarget();
         AfterStart();
     }
 
@@ -130,6 +130,7 @@ public abstract class Fish : MonoBehaviour, IKnockbakable, IKillable{
 
         if(Target == null && _gameMan.NumberOfFishes > 1){
             ChangeTarget();
+            CalculateChild();
         }
 
         
@@ -153,13 +154,9 @@ public abstract class Fish : MonoBehaviour, IKnockbakable, IKillable{
 
     protected abstract void AfterStart();
 
-    public void SubbHealthEvent(int heathSubbed){
-        Health = Mathf.Clamp(Health - heathSubbed, 0, int.MaxValue);
-    }
-
     protected virtual void ChangeTarget(){
         Target = _gameMan.GetRandomActiveGameObject(transform);
-        CalculateChild();
+        
     }
 
 
@@ -239,16 +236,12 @@ public abstract class Fish : MonoBehaviour, IKnockbakable, IKillable{
     }
 
     public void Die(){
+        Debug.Log("Destroy Fish");
         _gameMan.RemoveFish(gameObject);
         Destroy(gameObject);   
     }
 
-    void OnCollisionEnter2D(Collision2D collision){
-        if(collision.gameObject.CompareTag("Player")){
-            GetComponent<IKnockbakable>().SetKnockBack(collision.rigidbody.velocity*4);
-            Health --;
-        }
-        
+    void OnCollisionEnter2D(Collision2D collision){     
     }
 }
 
@@ -257,8 +250,7 @@ public interface IKillable{
     public int Health {get; set;}
 
     public void SubbHealthEvent(int heathSubbed){
-        Health = Mathf.Clamp(Health - heathSubbed, 0, int.MaxValue);
-
+        Health -= heathSubbed;
         if(Health <= 0){
             Die();
         }

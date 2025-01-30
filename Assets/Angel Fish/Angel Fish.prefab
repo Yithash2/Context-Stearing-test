@@ -184,7 +184,7 @@ MonoBehaviour:
   _rb: {fileID: 6022082155985166944}
   _maxSpeed: 90
   RepulsionForceMult: 0
-  AttractionForceMult: 1
+  AttractionForceMult: 0
   _obstacleLayer:
     serializedVersion: 2
     m_Bits: 64

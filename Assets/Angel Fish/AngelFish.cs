@@ -33,8 +33,12 @@ public class AngelFish : Fish
     }
 
     protected override void ChangeTarget(){
-        Target = GameMan.GetRandomChildGameObject(out Egg egg);
-        CalculateChild();
+        GameObject obj = GameMan.GetRandomChildGameObject(out Egg egg);
+        if(obj){
+            Target = obj;
+        }else{
+            Target = GameMan.GetRandomActiveGameObject(transform);
+        }
     }
 
     protected override Pattern GetPatterns(){

@@ -21,7 +21,6 @@ public class BlueFish : Fish{
 
                 if(Target.TryGetComponent<IKillable>(out IKillable killable)){
                     killable.SubbHealthEvent(1);
-                    //Health += 1;
                     transform.localScale = transform.localScale + new Vector3(1,1,1);
                 }
 
